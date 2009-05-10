@@ -19,6 +19,7 @@ Where `FileAppender` and `ConsoleAppender` are declared separately.
 
   * The appenders will be queued in the order they are placed in the XML declaration.
   * The appenders to be referenced *must inherit from `AppenderSkeleton` not just `IAppender`* I know this is a bit naff I will discuss this below
+  * Once an appender has caused an error it will be ignore indefinitely, so it's worth making the next appender a push model (SMTP, MSMQ) rather than pull (File, SQL) _I want to see if I can improve on this going forward_
 
 =How does it work?=
 
