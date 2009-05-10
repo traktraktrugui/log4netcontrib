@@ -13,12 +13,12 @@ The `FallbackAppender` is similar to the `ForwardAppender` that comes with log4n
 </appender>
 }}}
 
-Where FileAppender and ConsoleAppender are declared separately.
+Where `FileAppender` and `ConsoleAppender` are declared separately.
 
 =Things to be aware of=
 
-* The appenders will be queued in the order they are placed in the XML declaration.
-* The appenders to be referenced *must inherit from `AppenderSkeleton` not just `IAppender`* I know this is a bit naff I will discuss this below
+  * The appenders will be queued in the order they are placed in the XML declaration.
+  * The appenders to be referenced *must inherit from `AppenderSkeleton` not just `IAppender`* I know this is a bit naff I will discuss this below
 
 =How does it work?=
 
