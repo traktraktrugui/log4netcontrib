@@ -7,6 +7,7 @@ using log4net.Core;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using log4net.Appender;
+using log4netContrib.Appender;
 
 namespace log4netContrib.Tests
 {

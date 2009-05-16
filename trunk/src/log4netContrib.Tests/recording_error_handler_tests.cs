@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using log4net.Core;
 using log4net.Util;
+using log4netContrib.Appender;
 
 namespace log4netContrib.Tests
 {
