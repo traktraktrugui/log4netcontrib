@@ -5,7 +5,7 @@ using System.Text;
 using log4net.Util;
 using log4net.Core;
 
-namespace log4netContrib
+namespace log4netContrib.Appender
 {
     /// <summary>
     /// This object records whether an error has been recorded

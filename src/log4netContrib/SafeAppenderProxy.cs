@@ -6,10 +6,10 @@ using log4net.Appender;
 using log4net.Core;
 using log4net.Util;
 
-namespace log4netContrib
+namespace log4netContrib.Appender
 {
     /// <summary>
-    /// In conjuction with the <see cref="RecordingErrorHandler" /> object this object
+    /// In conjuction with the <see cref="RecordingErrorHandler" /> object, this object
     /// is responsible for trying to append to the appender it wraps and returning whether
     /// the appending caused an error or not
     /// </summary>
@@ -18,37 +18,17 @@ namespace log4netContrib
     public class SafeAppenderProxy
     {
         protected AppenderSkeleton innerAppender;
-        private readonly object locker = new object();
         protected bool firstTimeThrough = true;
 
-        public SafeAppenderProxy(IAppender appenderToDecorate)
+        public SafeAppenderProxy(IAppender appenderToWrap)
         {
-            var convertedAppender = appenderToDecorate as AppenderSkeleton;
+            var convertedAppender = appenderToWrap as AppenderSkeleton;
             if (convertedAppender == null)
                 throw new InvalidOperationException("cannot use SafeAppenderDecorator with an appender that does not inherit from AppenderSkeleton as it needs to hook into the IErrorHandler, to gather errors.");
 
             innerAppender = convertedAppender;
             convertedAppender.ErrorHandler = new RecordingErrorHandler(
                                                 new OnlyOnceErrorHandler());
-        }
-
-        protected void SetFirstTimeThrough(bool value)
-        {
-            lock (locker)
-            {
-                firstTimeThrough = value;
-            }
-        }
-
-        protected bool IsFirstTimeThrough
-        {
-            get
-            {
-                lock (locker)
-                {
-                    return firstTimeThrough;
-                }
-            }
         }
 
         public AppenderSkeleton Appender
@@ -72,10 +52,10 @@ namespace log4netContrib
         protected bool DoAppend(Action appendAction)
         {
             var errorHandler = (RecordingErrorHandler)innerAppender.ErrorHandler;
-            if (IsFirstTimeThrough)
+            if (firstTimeThrough)
             {
                 appendAction();
-                SetFirstTimeThrough(false);
+                firstTimeThrough = false;
             }
             else
             {
