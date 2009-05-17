@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" appbase="bin\Debug" configfile="log4net.Contrib.Tests.dll.config" binpathtype="Auto">
+    <assembly path="log4netContrib.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="bin\Release\log4netContrib.Tests.dll" />
+  </Config>
+</NUnitProject>

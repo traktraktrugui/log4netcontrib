@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<project name="log4netContrib" default="build">
+    <property name="runtests" value="true" />
+    <property name="nunit.dir" value="D:\Program Files\NUnit 2.4.7\bin" />
+    
+    <target name="clean" description="remove all generated files">
+        <delete dir="build" />
+    </target>
+        
+    <target name="build" depends="clean" description="compiles the source code">
+        <mkdir dir="build" />
+        <call target="copy.dependencies"/>
+        <call target="build.library"/>
+        <call target="run.tests" if="${runtests}" />
+    </target>
+    
+    <target name="copy.dependencies" description="copies all the dependent assemblies for log4net-altconf">
+        <copy todir="build">
+            <fileset basedir="libs">
+                <include name="nunit.framework"/>
+                <include name="log4net.dll"/>
+                <include name="Rhino.Mocks"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="build.library" description="builds the main library assembly">
+        <csc target="library" output="build/log4netContrib.dll">
+            <sources>
+                <include name="src/log4netContrib/**/*.cs" />
+            </sources>
+            <references>
+                <include name="libs/*.dll" />
+            </references>
+        </csc>
+    </target>
+    
+    <target name="build.tests" description="builds the tests library assembly">
+        <csc target="library" output="build/log4netContrib.Tests.dll">
+            <sources>
+                <include name="src/log4netContrib.Tests/**/*.cs" />
+            </sources>
+            <references>
+                <include name="build/log4netContrib.dll"/>
+                <include name="libs/*.dll" />
+            </references>
+        </csc>
+    </target>
+    
+    <target name="run.tests" depends="build.tests" description="runs the tests created against NUnit">
+        <exec program="${nunit.dir}\nunit-console.exe" commandline="src/log4netContrib.Tests/log4netContrib.Tests.nunit /nologo"/> 
+    </target>
+    
+</project>
