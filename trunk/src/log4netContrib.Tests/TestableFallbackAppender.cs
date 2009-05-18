@@ -17,32 +17,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net.Appender;
+using log4netContrib.Appender;
 
 namespace log4netContrib.Tests
 {
-    public class StubbingAppender : AppenderSkeleton
+    public class TestableFallbackAppender : FallbackAppender
     {
-        protected int appendCalledCounter = 0;
-
-        protected override void Append(log4net.Core.LoggingEvent loggingEvent)
+        public IList<FallbackAppenderProxyBase> SafeAppenderList
         {
-            appendCalledCounter++;
-        }
-
-        protected override void Append(log4net.Core.LoggingEvent[] loggingEvents)
-        {
-            appendCalledCounter++;
-        }
-
-        public void SetError(string message)
-        {
-            ErrorHandler.Error(message);
-        }
-
-        public int AppendCalledCounter
-        {
-            get { return appendCalledCounter; }
+            get { return safeAppenderList; }
         }
     }
 }

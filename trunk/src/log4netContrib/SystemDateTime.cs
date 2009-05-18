@@ -17,32 +17,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net.Appender;
 
-namespace log4netContrib.Tests
+namespace log4netContrib
 {
-    public class StubbingAppender : AppenderSkeleton
+    /// <summary>
+    /// Provides an abstraction for the system clock
+    /// </summary>
+    public static class SystemDateTime
     {
-        protected int appendCalledCounter = 0;
-
-        protected override void Append(log4net.Core.LoggingEvent loggingEvent)
-        {
-            appendCalledCounter++;
-        }
-
-        protected override void Append(log4net.Core.LoggingEvent[] loggingEvents)
-        {
-            appendCalledCounter++;
-        }
-
-        public void SetError(string message)
-        {
-            ErrorHandler.Error(message);
-        }
-
-        public int AppendCalledCounter
-        {
-            get { return appendCalledCounter; }
-        }
+        /// <summary>
+        /// By default returns the current date and time but can be set for
+        /// unit testing purposes
+        /// </summary>
+        public static Func<DateTime> Now = () => DateTime.Now;
     }
 }
