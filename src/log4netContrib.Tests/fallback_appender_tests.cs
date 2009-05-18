@@ -1,4 +1,19 @@
-﻿using System;
+﻿#region licence
+//  Copyright 2009 Michael Cromwell
+
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+
+//       http://www.apache.org/licenses/LICENSE-2.0
+
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +53,71 @@ namespace log4netContrib.Tests
             sut = null;
         }
     }
-            
+
+
+    [TestFixture]
+    public class when_fallback_appender_is_activated_: fallback_appender_testing_base
+    {
+        [Test]
+        public void given_mode_is_indefinite_should_wrap_appenders_with_indefinite_proxy()
+        {
+            var appender = new StubbingAppender();
+            var sut = new TestableFallbackAppender();
+            sut.AddAppender(appender);
+            sut.Mode = FallbackAppenderMode.Indefinite;
+            sut.ActivateOptions();
+            Assert.That(sut.SafeAppenderList[0], Iz.InstanceOfType(typeof(IndefiniteAppenderProxy)));
+        }
+
+        [Test]
+        public void given_mode_is_time_should_wrap_appenders_with_time_appender_proxy()
+        {
+            var appender = new StubbingAppender();
+            var sut = new TestableFallbackAppender();
+            sut.AddAppender(appender);
+            sut.Mode = FallbackAppenderMode.Time;
+            sut.ActivateOptions();
+            Assert.That(sut.SafeAppenderList[0], Iz.InstanceOfType(typeof(TimeAppenderProxy)));
+        }
+
+        [Test]
+        public void given_mode_is_count_should_wrap_appenders_with_count_appender_proxy()
+        {
+            var appender = new StubbingAppender();
+            var sut = new TestableFallbackAppender();
+            sut.AddAppender(appender);
+            sut.Mode = FallbackAppenderMode.Count;
+            sut.ActivateOptions();
+            Assert.That(sut.SafeAppenderList[0], Iz.InstanceOfType(typeof(CountAppenderProxy)));
+        }
+    }
+
+
+    [TestFixture]
+    public class when_setting_minutes_timeout : fallback_appender_testing_base
+    {
+        [Test]
+        public void given_the_amount_is_zero_or_less_should_ignore()
+        {
+            var existing = sut.MinutesTimeout;
+            sut.MinutesTimeout = -1;
+            Assert.That(sut.MinutesTimeout, Iz.EqualTo(existing));
+        }
+    }
+
+
+    [TestFixture]
+    public class when_setting_append_count : fallback_appender_testing_base
+    {
+        [Test]
+        public void given_the_amount_is_less_than_one_should_ignore()
+        {
+            var existing = sut.AppendCount;
+            sut.AppendCount = 0;
+            Assert.That(sut.AppendCount, Iz.EqualTo(existing));
+        }
+    }
+    
     [TestFixture]
     public class when_fallback_appender_is_appending_single_event : fallback_appender_testing_base
     {
@@ -145,6 +224,7 @@ namespace log4netContrib.Tests
     }
 
     [TestFixture]
+    [Category("integration")]
     public class when_fallback_appender_is_being_appended_to 
     {
         [Test]
@@ -154,6 +234,22 @@ namespace log4netContrib.Tests
             var log = LogManager.GetLogger("logger");
             log.Debug("foo");
         }
+    }
+
+
+    [TestFixture]
+    [Category("integration")]
+    public class when_fallback_appender_has_mode_set_in_xml
+    {
+        [Test]
+        public void should_be_available_in_runtime()
+        {
+            XmlConfigurator.Configure();
+            var appender = LogManager.GetRepository().GetAppenders()[0] as FallbackAppender;
+            Assert.That(appender, Iz.Not.Null);
+            Assert.That(appender.Mode, Iz.EqualTo(FallbackAppenderMode.Time));
+        }
+    
     }
 
 }
