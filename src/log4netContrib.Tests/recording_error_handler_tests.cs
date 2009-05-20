@@ -29,8 +29,7 @@ namespace log4netContrib.Tests
         [Test]
         public void should_record_as_an_error()
         {
-            var sut = new RecordingErrorHandler(
-                        new OnlyOnceErrorHandler());
+            var sut = new RecordingErrorHandler("prefix");
             sut.Error("foo");
             Assert.That(sut.HasError, Iz.True);
         }
@@ -42,8 +41,7 @@ namespace log4netContrib.Tests
         [Test]
         public void should_record_as_an_error()
         {
-            var sut = new RecordingErrorHandler(
-                        new OnlyOnceErrorHandler());
+            var sut = new RecordingErrorHandler("prefix");
             sut.Error("foo", new Exception("foo"));
             Assert.That(sut.HasError, Iz.True);
         }
@@ -55,8 +53,7 @@ namespace log4netContrib.Tests
         [Test]
         public void should_record_as_an_error()
         {
-            var sut = new RecordingErrorHandler(
-                        new OnlyOnceErrorHandler());
+            var sut = new RecordingErrorHandler("prefix");
             sut.Error("foo", new Exception("foo"), ErrorCode.GenericFailure);
             Assert.That(sut.HasError, Iz.True);
         }

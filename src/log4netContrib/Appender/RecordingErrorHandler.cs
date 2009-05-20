@@ -27,12 +27,12 @@ namespace log4netContrib.Appender
     /// <author>Michael Cromwell</author>
     public class RecordingErrorHandler : IErrorHandler
     {
-        protected IErrorHandler innerErrorHandler;
         protected bool hasError;
+        protected string prefix = string.Empty;
 
-        public RecordingErrorHandler(IErrorHandler errorHandler)
+        public RecordingErrorHandler(string prefix)
         {
-            innerErrorHandler = errorHandler;
+            this.prefix = prefix;
         }
 
         public bool HasError
@@ -45,20 +45,31 @@ namespace log4netContrib.Appender
 
         public void Error(string message)
         {
-            innerErrorHandler.Error(message);
             hasError = true;
+            if (ShouldLog)
+                LogLog.Error("[" + this.prefix + "] " + message);
         }
 
         public void Error(string message, Exception exception)
         {
-            innerErrorHandler.Error(message, exception);
             hasError = true;
+            if (ShouldLog)
+                LogLog.Error("[" + this.prefix + "] " + message, exception);
         }
 
         public void Error(string message, Exception exception, ErrorCode errorCode)
         {
-            innerErrorHandler.Error(message, exception, errorCode);
             hasError = true;
+            if (ShouldLog)
+                LogLog.Error("[" + this.prefix + "] " + message, exception);
+        }
+
+        private static bool ShouldLog
+        {
+            get
+            {
+                return !(LogLog.InternalDebugging == false || LogLog.QuietMode);
+            }
         }
 
         internal void ResetError()
