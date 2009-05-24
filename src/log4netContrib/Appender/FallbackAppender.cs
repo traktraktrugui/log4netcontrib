@@ -27,40 +27,25 @@ namespace log4netContrib.Appender
     /// Used to determine how the <see cref="FallbackAppender"/> deals with appenders
     /// that have caused an error
     /// </summary>
-    /// <remarks>
-    /// <list type="table">
-    /// <listheader>
-    /// <term><c>Indefinite</c></term>
-    /// <term><c>Time</c></term>
-    /// <term><c>Count</c></term>
-    /// </listheader>
-    /// <item>
-    /// <description>
-    /// Indefinite will mean that once an appender has had an error that appender
-    /// will not be appended to indefinitely.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Time will mean that once an appender has had an error the time will be recorded
-    /// and each time subsequent appends are attempted a check will be made to see if the
-    /// time the error was recorded is after the specified <see cref="FallbackAppender.MinutesTimeout"/> if
-    /// so the appender will be reset as having an error and will be used once again.
-    /// </description>
-    /// </item>
-    /// <item>
-    /// <description>
-    /// Count will mean that once an appender has had an error subsequent appends will be
-    /// counted and if the number of counts reaches the <see cref="FallbackAppender.AppendCount"/> the
-    /// appender will be reset as having an error and will be used once again.
-    /// </description>
-    /// </item>
-    /// </list>
-    /// </remarks>
     public enum FallbackAppenderMode
     {
+        /// <summary>
+        /// Indefinite will mean that once an appender has had an error that appender
+        /// will not be appended to indefinitely.
+        /// </summary>
         Indefinite,
+        /// <summary>
+        /// Time will mean that once an appender has had an error the time will be recorded
+        /// and each time subsequent appends are attempted a check will be made to see if the
+        /// time the error was recorded is after the specified <see cref="FallbackAppender.MinutesTimeout"/> if
+        /// so the appender will be reset as having an error and will be used once again.
+        /// </summary>
         Time,
+        /// <summary>
+        /// Count will mean that once an appender has had an error subsequent appends will be
+        /// counted and if the number of counts reaches the <see cref="FallbackAppender.AppendCount"/> the
+        /// appender will be reset as having an error and will be used once again.
+        /// </summary>
         Count
     }
 

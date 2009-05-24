@@ -35,6 +35,9 @@ namespace log4netContrib.Appender
             this.prefix = prefix;
         }
 
+        /// <summary>
+        /// Indicates if this error handler currently has an error
+        /// </summary>
         public bool HasError
         {
             get

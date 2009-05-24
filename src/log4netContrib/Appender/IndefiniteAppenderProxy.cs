@@ -37,20 +37,12 @@ namespace log4netContrib.Appender
             : base(appenderToWrap)
         {
         }
-                
+
         protected override bool DoAppend(Action appendAction)
         {
-            if (firstTimeThrough)
-            {
+            if (!errorHandler.HasError)
                 appendAction();
-                firstTimeThrough = false;
-            }
-            else
-            {
-                if (!errorHandler.HasError)
-                    appendAction();
-            }
-
+            
             return !errorHandler.HasError;
         }
     }

@@ -36,7 +36,7 @@ namespace log4netContrib.Appender
         protected DateTime? errorOccurredTimestamp;
 
         /// <summary>
-        /// Wraps up an <see cref="IAppender"/> adding extra behaviour to how to handle
+        /// Wraps up an <see cref="log4net.Appender.IAppender"/> adding extra behaviour to how to handle
         /// an error while appending
         /// </summary>
         /// <param name="minutesTimeout">Amount of minutes to wait before attempting to append again while has error</param>
@@ -48,24 +48,16 @@ namespace log4netContrib.Appender
 
         protected override bool DoAppend(Action appendAction)
         {
-            if (firstTimeThrough)
+            if ((errorOccurredTimestamp.HasValue)
+                && (SystemDateTime.Now() >= errorOccurredTimestamp.Value.AddMinutes(minutesTimeout)))
             {
+                errorOccurredTimestamp = null;
+                errorHandler.ResetError();
+            }
+
+            if (!errorHandler.HasError)
                 appendAction();
-                firstTimeThrough = false;
-            }
-            else
-            {
-                if ((errorOccurredTimestamp.HasValue) 
-                    && (SystemDateTime.Now() >= errorOccurredTimestamp.Value.AddMinutes(minutesTimeout)))
-                {
-                    errorOccurredTimestamp = null;
-                    errorHandler.ResetError();
-                }
-
-                if (!errorHandler.HasError)
-                    appendAction();
-            }
-
+            
             if (errorHandler.HasError)
             {
                 errorOccurredTimestamp = SystemDateTime.Now();

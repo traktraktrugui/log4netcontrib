@@ -30,7 +30,6 @@ namespace log4netContrib.Appender
     {
         protected AppenderSkeleton innerAppender;
         protected RecordingErrorHandler errorHandler;
-        protected bool firstTimeThrough = true;
 
         public FallbackAppenderProxyBase(IAppender appenderToWrap)
         {
@@ -39,8 +38,7 @@ namespace log4netContrib.Appender
                 throw new InvalidOperationException("cannot use IndefiniteAppenderProxy with an appender that does not inherit from AppenderSkeleton as it needs to hook into the IErrorHandler, to gather errors.");
 
             innerAppender = convertedAppender;
-            errorHandler = new RecordingErrorHandler(
-                            new OnlyOnceErrorHandler());
+            errorHandler = new RecordingErrorHandler(GetType().Name);
             convertedAppender.ErrorHandler = errorHandler;
         }
 

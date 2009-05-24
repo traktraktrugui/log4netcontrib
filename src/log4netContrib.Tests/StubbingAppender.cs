@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using log4net.Appender;
+using log4net.Core;
 
 namespace log4netContrib.Tests
 {
@@ -23,14 +24,19 @@ namespace log4netContrib.Tests
     {
         protected int appendCalledCounter = 0;
 
-        protected override void Append(log4net.Core.LoggingEvent loggingEvent)
+        public Action<LoggingEvent> SingleEventAppendAction = (x) => { };
+        public Action<LoggingEvent[]> MultipleEventAppendAction = (x) => { };
+
+        protected override void Append(LoggingEvent loggingEvent)
         {
             appendCalledCounter++;
+            SingleEventAppendAction(loggingEvent);
         }
 
         protected override void Append(log4net.Core.LoggingEvent[] loggingEvents)
         {
             appendCalledCounter++;
+            MultipleEventAppendAction(loggingEvents);
         }
 
         public void SetError(string message)
