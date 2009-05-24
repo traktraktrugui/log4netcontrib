@@ -36,7 +36,7 @@ namespace log4netContrib.Appender
         protected int currentAppendCount;
 
         /// <summary>
-        /// Wraps up an <see cref="IAppender"/> adding extra behaviour to how to handle
+        /// Wraps up an <see cref="log4net.Appender.IAppender"/> adding extra behaviour to how to handle
         /// an error while appending
         /// </summary>
         /// <param name="appendCount">number of appends to count to before trying to append agains while has error</param>
@@ -48,23 +48,15 @@ namespace log4netContrib.Appender
 
         protected override bool DoAppend(Action appendAction)
         {
-            if (firstTimeThrough)
+            if (currentAppendCount >= appendCount)
             {
+                currentAppendCount = 0;
+                errorHandler.ResetError();
+            }
+
+            if (!errorHandler.HasError)
                 appendAction();
-                firstTimeThrough = false;
-            }
-            else
-            {
-                if (currentAppendCount >= appendCount)
-                {
-                    currentAppendCount = 0;
-                    errorHandler.ResetError();
-                }
-
-                if (!errorHandler.HasError)
-                    appendAction();
-            }
-
+            
             if (errorHandler.HasError)
             {
                 currentAppendCount++;

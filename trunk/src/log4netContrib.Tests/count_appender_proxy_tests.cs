@@ -63,7 +63,7 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new CountAppenderProxy(appender, 5);
-            appender.SetError("foo");
+            appender.SingleEventAppendAction = (x) => appender.SetError("foo");
             var result = sut.TryAppend(new LoggingEvent(
                                         new LoggingEventData()));
             Assert.That(result, Iz.False);
@@ -86,9 +86,9 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new CountAppenderProxy(appender, 5);
+            appender.SingleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
-            appender.SetError("foo");
             sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
             Assert.That(appender.AppendCalledCounter, Iz.EqualTo(1));
@@ -99,9 +99,9 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new CountAppenderProxy(appender, 5);
+            appender.SingleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
-            appender.SetError("foo");
             var result = sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
             Assert.That(result, Iz.False);
@@ -112,11 +112,12 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new CountAppenderProxy(appender, 2);
-            appender.SetError("foo");
+            appender.SingleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
             sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
+            appender.SingleEventAppendAction = (x) => { };
             var result = sut.TryAppend(new LoggingEvent(
                             new LoggingEventData()));
             Assert.That(appender.AppendCalledCounter, Iz.EqualTo(2));
@@ -150,8 +151,8 @@ namespace log4netContrib.Tests
         public void given_it_is_first_time_through_and_error_raised_should_return_false()
         {
             var appender = new StubbingAppender();
+            appender.MultipleEventAppendAction = (x) => appender.SetError("foo");
             var sut = new TimeAppenderProxy(appender, 5);
-            appender.SetError("foo");
             var result = sut.TryAppend(loggingEvents);
             Assert.That(result, Iz.False);
         }
@@ -171,8 +172,8 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new TimeAppenderProxy(appender, 5);
+            appender.MultipleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(loggingEvents);
-            appender.SetError("foo");
             sut.TryAppend(loggingEvents);
             Assert.That(appender.AppendCalledCounter, Iz.EqualTo(1));
         }
@@ -182,8 +183,8 @@ namespace log4netContrib.Tests
         {
             var appender = new StubbingAppender();
             var sut = new TimeAppenderProxy(appender, 5);
+            appender.MultipleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(loggingEvents);
-            appender.SetError("foo");
             var result = sut.TryAppend(loggingEvents);
             Assert.That(result, Iz.False);
         }
@@ -194,9 +195,10 @@ namespace log4netContrib.Tests
             SystemDateTime.Now = () => new DateTime(2009, 1, 1, 10, 0, 0);
             var appender = new StubbingAppender();
             var sut = new TimeAppenderProxy(appender, 5);
-            appender.SetError("foo");
+            appender.MultipleEventAppendAction = (x) => appender.SetError("foo");
             sut.TryAppend(loggingEvents);
             SystemDateTime.Now = () => new DateTime(2009, 1, 1, 10, 6, 0);
+            appender.MultipleEventAppendAction = (x) => { };
             var result = sut.TryAppend(loggingEvents);
             Assert.That(appender.AppendCalledCounter, Iz.EqualTo(2));
             Assert.That(result, Iz.True);
