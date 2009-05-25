@@ -31,9 +31,47 @@ One of the problems of the earlier implementations was what to do with an append
 
 We don't want to have active monitoring for the error'ed appenders as this starts to use up resources and moves away from the lightweight logging library it currently is, therefore I came up with 3 simple modes to allow more control over how to handle when an appender goes into a error'ed state:
 
+==Details==
+
 || *Mode* || *Description* || *Settings* ||
 || Indefinite (Default) || This mode is the simplest and simply states that if an appender goes into an error'ed state then it will be ignored until the log4net configuration is reloaded || _N/A_ ||
 || Count || This mode will actively count the number of appends that are attempted against the appender from the moment it goes into an error'ed state and when the append attempts reaches the `AppendCount` the appender will be reset from the error'ed state || `AppendCount Int32` _(20)_ || 
 || Time || This mode will timestamp the moment that an appender goes into an error'ed state and at each append attempt it will check to see if the `MinutesTimeout` set has been reached and if so will reset the appender from being in the error'ed state || `MinutesTimeout Int32` _(5)_ ||
+
+==Examples==
+
+===Indefinite===
+
+{{{
+<appender name="FallbackAppender" type="log4netContrib.Appender.FallbackAppender, log4netContrib" >
+    <appender-ref ref="FileAppender" />
+    <appender-ref ref="ConsoleAppender" />
+    <mode value="Indefinite" />
+</appender>
+}}}
+
+===Count===
+
+{{{
+<appender name="FallbackAppender" type="log4netContrib.Appender.FallbackAppender, log4netContrib" >
+    <appender-ref ref="FileAppender" />
+    <appender-ref ref="ConsoleAppender" />
+    <mode value="Count" />
+    <AppendCount value="50"/>
+</appender>
+}}}
+
+===Time===
+
+{{{
+<appender name="FallbackAppender" type="log4netContrib.Appender.FallbackAppender, log4netContrib" >
+    <appender-ref ref="FileAppender" />
+    <appender-ref ref="ConsoleAppender" />
+    <mode value="Time" />
+    <MinutesTimeout value="10"/>
+</appender>
+}}}
+
+==Notes==
 
 When deciding to use the *Indefinite* mode it's worth using push model appenders rather than pull i.e. email, messaging rather than file, database this way you are actively notified that your first appender has error'ed.
