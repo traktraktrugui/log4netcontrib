@@ -1,5 +1,5 @@
+#summary general details and usage for the FallbackAppender object
 #labels Featured,Phase-Implementation,Phase-Design,Phase-Deploy
-#general details and usage for the FallbackAppender object
 =What does it do?=
 
 The `FallbackAppender` is similar to the `ForwardAppender` that comes with log4net in that it references other appenders via the `appender-ref` element. The difference is that while the `ForwardAppender` will append to all the contained appenders the `FallbackAppender` will instead queue each of the appenders and will try to append to the first in the queue if successful it will stop if it isn't successful it will try the next one in the queue and will do this until one is successful or all fail.
