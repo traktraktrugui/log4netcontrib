@@ -1,0 +1,3 @@
+When adding a new appender to [log4net](http://logging.apache.org/log4net/index.html) I thought it would be a good idea to have a central location for contributions to [log4net](http://logging.apache.org/log4net/index.html) rather than having separate repositories, if you have any added functionality to [log4net](http://logging.apache.org/log4net/index.html) you have written and want to share, drop me an email to michaelacromwell at googlemail dotcom and I will endeavour to add it to the trunk.
+
+Code is written in C# and currently aimed for version 3.5 of the .net framework. The log4net version it's dependent against is 1.2.10.0.
